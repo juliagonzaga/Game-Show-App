@@ -1,7 +1,7 @@
 const key = document.querySelector('#qwerty');
 const phrase = document.querySelector('#phrase');
 const start = document.querySelector('.btn__reset');
-let button = document.querySelectorAll('button');
+const qwerty = document.querySelector('#qwerty');
 let missed = 0;
 
 let phrases = [ 
@@ -36,28 +36,32 @@ function  addPhraseToDisplay(arr) {
     }
 };
 
-function checkLetter(click) {
+function checkLetter(pressedBtn) {
     let letter = document.querySelectorAll('.letter');
+    let correctGuess;
     for (let i = 0; i < letter.length; i++ ){
-        let letterGuess = letter[i].textContent;
-        if (letterGuess === click) {
+        let letterGuess = letter[i].textContent.toLowerCase();
+        if (letterGuess === pressedBtn.textContent) {
             letter[i].className = 'show';
-            return letterGuess;
+            correctGuess = letter[i];
+            return correctGuess;
         } else { 
             return null;
-        }
+        }  
+        
     }
 };
 
-button.addEventListener('keydown', (e) => {
-    e.target.className = 'chosen';
-    let chosen = document.querySelectorAll('.chosen');
-    if (chosen) {
-        chosen.setAttribute('disabled', '');
+qwerty.addEventListener('click', (e) => {
+    e.preventDefault();
+    let target = e.target;
+    if (target.tagName === 'BUTTON') {
+        target.className = 'chosen';
+        target.setAttribute('disabled', '');
+        let letterFound = checkLetter(target);
+        console.log(letterFound);
     }
 });
 
 let phraseArray = getRandomPhraseAsArray(phrases);
 addPhraseToDisplay(phraseArray);
-
-console.log(btn);
