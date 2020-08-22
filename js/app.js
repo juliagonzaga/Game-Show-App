@@ -36,30 +36,31 @@ function  addPhraseToDisplay(arr) {
     }
 };
 
-function checkLetter(pressedBtn) {
+function checkLetter(clickedBtn) {
     let letter = document.querySelectorAll('.letter');
-    let correctGuess;
+    let correctGuess = null;
     for (let i = 0; i < letter.length; i++ ){
-        let letterGuess = letter[i].textContent.toLowerCase();
-        if (letterGuess === pressedBtn.textContent) {
+        let letterGuess = letter[i].textContent;
+        if (letterGuess === clickedBtn) {
             letter[i].className = 'show';
-            correctGuess = letter[i];
-            return correctGuess;
-        } else { 
-            return null;
-        }  
-        
+            correctGuess = letterGuess;
+        }
     }
+    return correctGuess;
 };
 
 qwerty.addEventListener('click', (e) => {
     e.preventDefault();
     let target = e.target;
-    if (target.tagName === 'BUTTON') {
+    if (target.tagName == 'BUTTON') {
         target.className = 'chosen';
         target.setAttribute('disabled', '');
-        let letterFound = checkLetter(target);
-        console.log(letterFound);
+        let guessed = target.textContent;
+        let letterFound = checkLetter(guessed);
+        
+        if (letterFound === null) {
+            missed++;
+        }
     }
 });
 
