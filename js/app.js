@@ -3,6 +3,7 @@ const startBtn = document.querySelector('.btn__reset');
 const phrase = document.querySelector('#phrase');
 const qwerty = document.querySelector('#qwerty');
 let title = document.querySelector('.title');
+let hearts = document.querySelectorAll('.tries');
 let missed = 0;
 
 let phrases = [ 
@@ -62,10 +63,10 @@ const checkLetter = button => {
     return correctGuess;
 };  
 
-//check if the game has been won or lost
 
 let h3 = document.createElement('h3');
 overlay.appendChild(h3);
+//check if the game has been won or lost
 const checkWin = () => {
     let correctLetter = document.querySelectorAll('.show');
     let totalLetters = letter.length;
@@ -94,7 +95,6 @@ qwerty.addEventListener('click', (e) => {
         let letterFound = checkLetter(guess);
 
         if (letterFound === null) {
-            let hearts = document.querySelectorAll('.tries');
             missed++;
 
             if (missed <= 5){
