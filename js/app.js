@@ -3,7 +3,6 @@ const startBtn = document.querySelector('.btn__reset');
 const phrase = document.querySelector('#phrase');
 const qwerty = document.querySelector('#qwerty');
 let title = document.querySelector('.title');
-
 let missed = 0;
 
 let phrases = [ 
@@ -64,19 +63,22 @@ const checkLetter = button => {
 };  
 
 //check if the game has been won or lost
+
+let h3 = document.createElement('h3');
+overlay.appendChild(h3);
 const checkWin = () => {
     let correctLetter = document.querySelectorAll('.show');
     let totalLetters = letter.length;
 
     if(correctLetter.length === totalLetters) {
         overlay.className = 'win';
-        title = 'You Won!';
         startBtn.textContent = 'Play Again';
+        h3.textContent = 'You Win!';
         overlay.style.display = 'flex';
     } else if (missed > 4) {
         overlay.className = 'lose';
-        title = 'You Lose!';
         startBtn.textContent = 'Try Again';
+        h3.textContent = 'You Lose!';
         overlay.style.display = 'flex';
     }
 }; 
@@ -106,3 +108,4 @@ qwerty.addEventListener('click', (e) => {
     };
     checkWin()
 });
+
