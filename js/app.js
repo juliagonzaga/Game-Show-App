@@ -1,10 +1,9 @@
-const key = document.querySelector('#qwerty');
+const overlay = document.querySelector('#overlay');
+const startBtn = document.querySelector('.btn__reset');
 const phrase = document.querySelector('#phrase');
-const start = document.querySelector('.btn__reset');
 const qwerty = document.querySelector('#qwerty');
-const scoreboard = document.querySelector('#scoreboard ol');
-const win = document.querySelector('.win');
-let lives = 5;
+let title = document.querySelector('.title');
+
 let missed = 0;
 
 let phrases = [ 
@@ -15,92 +14,95 @@ let phrases = [
     'believe in yourself'
 ];
 
-start.addEventListener('click', () => {
-    const overlay = document.querySelector('#overlay');
+//listen for the start game button to be pressed
+startBtn.addEventListener('click', () => {
     overlay.style.display = 'none';
 });
 
-function getRandomPhraseAsArray(arr) {
+//return a random phrase from an array
+const getRandomPhraseAsArray = arr => {
     let randomIndex = Math.round(Math.random() * (arr.length - 1));
     let randomPhrase = arr[randomIndex].split('');
+        
     return randomPhrase;
 };  
 
-function  addPhraseToDisplay(arr) {
+//adds the letters of a string to the display
+const addPhraseToDisplay = arr => {
     for (let i = 0; i < arr.length; i++){
-        let ul = document.querySelector('#phrase ul');
         let list = document.createElement('li');
+        let ul = phrase.firstElementChild;
         list.textContent = arr[i];
         ul.appendChild(list);
 
         if (arr[i] !== ' '){
             list.className = 'letter';
+        } else {
+            list.className = 'space';
         }
     }
 };
 
-addPhraseToDisplay(getRandomPhraseAsArray(phrases));
+const phraseArray = getRandomPhraseAsArray(phrases);
+addPhraseToDisplay(phraseArray);
 let letter = document.querySelectorAll('.letter');
 
-function checkLetter(clickedBtn) {
+
+//check if a letter is in the phrase
+const checkLetter = button => {
     let correctGuess = null;
 
     for (let i = 0; i < letter.length; i++ ){
         let letterGuess = letter[i].textContent;
 
-        if (letterGuess === clickedBtn) {
+        if (letterGuess === button) {
             letter[i].className = 'show';
             correctGuess = letterGuess;
         }
     }
     return correctGuess;
-};
+};  
 
-function updateLives() {
-    scoreboard.innerHTML = '';
-
-    for(let i = 0; i < missed; i++){
-        let list = document.createElement('li');
-            list.innerHTML = `<img src="images/lostHeart.png" height="35px" width="30px">`;
-            scoreboard.appendChild(list);
-    }
-
-    for(let i = 0; i < lives; i++){
-        let list = document.createElement('li');
-            list.innerHTML = `<img src="images/liveHeart.png" height="35px" width="30px">`;
-            list.className = 'tries';
-            scoreboard.appendChild(list);
-    }
-};
-
-function checkWin() {
+//check if the game has been won or lost
+const checkWin = () => {
     let correctLetter = document.querySelectorAll('.show');
-        correctLetter = correctLetter.length;
     let totalLetters = letter.length;
 
-    if(correctLetter === totalLetters) {
-        console.log('You Win');
-    };
-};
+    if(correctLetter.length === totalLetters) {
+        overlay.className = 'win';
+        title = 'You Won!';
+        startBtn.textContent = 'Play Again';
+        overlay.style.display = 'flex';
+    } else if (missed > 4) {
+        overlay.className = 'lose';
+        title = 'You Lose!';
+        startBtn.textContent = 'Try Again';
+        overlay.style.display = 'flex';
+    }
+}; 
 
+//listen for the onscreen keyboard to be clicked
 qwerty.addEventListener('click', (e) => {
-    e.preventDefault();
-    let target = e.target;
+    let btn = e.target;
     
-    if (target.tagName == 'BUTTON') {
-        target.className = 'chosen';
-        target.setAttribute('disabled', '');
-        let guess = target.textContent;
+    if (btn.tagName === 'BUTTON') {
+        btn.className = 'chosen';
+        btn.setAttribute('disabled', '');
+        let guess = btn.textContent;
         let letterFound = checkLetter(guess);
-        
+
         if (letterFound === null) {
-            lives--;
+            let hearts = document.querySelectorAll('.tries');
             missed++;
 
-            updateLives();
+            if (missed <= 5){
+                for (let i = 1 ; i <= missed; i++) {
+                    let index = [i] - 1;
+                    let img = hearts[index].firstElementChild;
+                    img.setAttribute('src', 'images/lostHeart.png');
+                }
+            }
         }
-    }
+    };
     checkWin()
 });
-
-updateLives();
