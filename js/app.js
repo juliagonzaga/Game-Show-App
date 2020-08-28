@@ -2,16 +2,14 @@ let overlay = document.querySelector('#overlay');
 let title = overlay.querySelector('.title');
 let startBtn = overlay.querySelector('.btn__reset');
 let phrase = document.getElementById('phrase');
+let letter = phrase.getElementsByClassName('letter');
 let qwerty = document.getElementById('qwerty');
 let hearts = document.querySelectorAll('.tries');
 let scoreboard = document.getElementById('scoreboard');
 let img = scoreboard.querySelectorAll('img');
 let keyboard = qwerty.querySelectorAll('button');
-
-let h3 = document.createElement('h3');
-overlay.appendChild(h3);
-
 let missed = 0;
+
 let phrases = [
     'you only live once',
     'aspire to inspire',
@@ -25,38 +23,15 @@ let phrases = [
     'make today count'
 ];
 
-let mainPhrases = [ 
-    'you only live once',
-    'aspire to inspire',
-    'all is well',
-    'die with memories',
-    'believe in yourself',
-    'create happiness',
-    'every moment matters',
-    'nothing is impossible',
-    'time is gold',
-    'make today count'
-];
-
-//reset keyboard
-function resetKeyboard() {
-    for (let i = 0; i < keyboard.length; i++){
-        keyboard[i].classList.remove('chosen');
-        keyboard[i].removeAttribute('disabled');
-    }
-}
-
 //return a random phrase from an array
 const getRandomPhraseAsArray = arr => {
     let randomIndex = Math.round(Math.random() * (arr.length - 1));
-    let randomPhrase = arr[randomIndex];
-        phrases = arr.filter(phrase => phrase !== randomPhrase);
-        randomPhrase = arr[randomIndex].split('');
-       
+    let randomPhrase = arr[randomIndex].split('');//creates an array of letters from the random phrase
+
     return randomPhrase;
 };  
 
-//adds the letters of a string to the display
+//displays the random phrase
 const addPhraseToDisplay = arr => {
     for (let i = 0; i < arr.length; i++){
         let list = document.createElement('li');
@@ -65,30 +40,69 @@ const addPhraseToDisplay = arr => {
         ul.appendChild(list);
 
         if (arr[i] !== ' '){
-            list.className = 'letter';
+            list.classList.add('letter');
         } else {
-            list.className = 'space';
+            list.classList.add('space');
         }
     }
 };
 
-addPhraseToDisplay(getRandomPhraseAsArray(phrases));
-let letter = document.querySelectorAll('.letter');
+//reset phrase
+function resetPhrase(){
+    let ul = phrase.firstElementChild;
+    ul.innerHTML = '';
+    addPhraseToDisplay(getRandomPhraseAsArray(phrases));
+};
+
+//reset keyboard
+function resetKeyboard() {
+    for (let i = 0; i < keyboard.length; i++){
+        keyboard[i].classList.remove('chosen');
+        keyboard[i].removeAttribute('disabled');
+    }
+};
+
+//reset hearts
+function resetHearts() {
+    for (let i = 0; i < img.length; i++){
+        img[i].setAttribute('src', 'images/liveHeart.png');
+    };
+};
+
+//reset game 
+function resetGame(){
+    missed = 0;
+    resetPhrase();
+    resetKeyboard();
+    resetHearts();
+};
+
+resetPhrase();
 
 //check if a letter is in the phrase
 const checkLetter = button => {
     let correctGuess = null;
 
     for (let i = 0; i < letter.length; i++ ){
-        let letterGuess = letter[i].textContent;
+        let guessedLetter = letter[i].textContent;
 
-        if (letterGuess === button) {
+        if (guessedLetter === button) {
             letter[i].classList.add('show');
-            correctGuess = letterGuess;
+            correctGuess = guessedLetter;
         }
     }
     return correctGuess;
 };  
+
+//listen for the start game button to be pressed
+startBtn.addEventListener('click', () => {
+    let resetBtn = startBtn.textContent;
+    overlay.style.display = 'none';
+    
+    if (resetBtn === 'Try Again' || resetBtn === 'Play Again') {
+        resetGame();
+    };
+});
 
 //check if the game has been won or lost
 const checkWin = () => {
@@ -98,13 +112,15 @@ const checkWin = () => {
     if(correctLetter.length === totalLetters) {
         overlay.className = 'win';
         startBtn.textContent = 'Play Again';
-        h3.textContent = 'You Win!';
+        title.textContent = 'You Win!';
         overlay.style.display = 'flex';
+        resetGame();
     } else if (missed > 4) {
         overlay.className = 'lose';
         startBtn.textContent = 'Try Again';
-        h3.textContent = 'You Lose!';
+        title.textContent = 'You Lose!';
         overlay.style.display = 'flex';
+        resetGame();
     }
 };
 
@@ -113,7 +129,7 @@ qwerty.addEventListener('click', (e) => {
     let btn = e.target;
     
     if (btn.tagName === 'BUTTON') {
-        btn.className = 'chosen';
+        btn.classList.add('chosen');
         btn.setAttribute('disabled', '');
         let guess = btn.textContent;
         let letterFound = checkLetter(guess);
@@ -132,28 +148,3 @@ qwerty.addEventListener('click', (e) => {
     checkWin();
 });
 
-//listen for the start game button to be pressed
-startBtn.addEventListener('click', () => {
-    overlay.style.display = 'none';
-    
-    if (startBtn.textContent === 'Try Again' || startBtn.textContent === 'Play Again') {
-        let ul = phrase.firstElementChild;
-        ul.innerHTML = '';
-
-        resetKeyboard();
-
-        for (let i = 0; i < img.length; i++){
-            img[i].setAttribute('src', 'images/liveHeart.png');
-        }
-
-        if (phrases.length === 0){
-            phrases = mainPhrases;
-            console.log(phrases)
-            
-            addPhraseToDisplay(getRandomPhraseAsArray(phrases));
-        }
-        
-        addPhraseToDisplay(getRandomPhraseAsArray(phrases));
-        missed = 0;
-    }
-});
