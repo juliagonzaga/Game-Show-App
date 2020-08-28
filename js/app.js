@@ -82,7 +82,7 @@ function transition () {
     setTimeout(function () {
         resetGame();
         overlay.style.display = 'flex';
-    }, 1000);
+    }, 800);
 };
 
 resetPhrase();
@@ -142,6 +142,7 @@ qwerty.addEventListener('click', (e) => {
         let letterFound = checkLetter(guess);
 
         if (letterFound === null) {
+            btn.classList.add('wrong');
             missed++;
 
             if (missed > 0){
