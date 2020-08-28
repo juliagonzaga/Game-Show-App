@@ -136,7 +136,7 @@ startBtn.addEventListener('click', () => {
             img[i].setAttribute('src', 'images/liveHeart.png');
         }
 
-        if (phrases.length < 0){
+        if (phrases.length === 0){
             phrases = mainPhrases;
             console.log(phrases)
             
