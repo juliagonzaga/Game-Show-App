@@ -77,6 +77,14 @@ function resetGame(){
     resetHearts();
 };
 
+//transition delay
+function transition () {
+    setTimeout(function () {
+        resetGame();
+        overlay.style.display = 'flex';
+    }, 1000);
+};
+
 resetPhrase();
 
 //check if a letter is in the phrase
@@ -94,16 +102,6 @@ const checkLetter = button => {
     return correctGuess;
 };  
 
-//listen for the start game button to be pressed
-startBtn.addEventListener('click', () => {
-    let resetBtn = startBtn.textContent;
-    overlay.style.display = 'none';
-    
-    if (resetBtn === 'Try Again' || resetBtn === 'Play Again') {
-        resetGame();
-    };
-});
-
 //check if the game has been won or lost
 const checkWin = () => {
     let correctLetter = document.querySelectorAll('.show');
@@ -113,8 +111,7 @@ const checkWin = () => {
         overlay.className = 'win';
         startBtn.textContent = 'Play Again';
         title.textContent = 'You Win!';
-        overlay.style.display = 'flex';
-        resetGame();
+        transition();
     } else if (missed > 4) {
         overlay.className = 'lose';
         startBtn.textContent = 'Try Again';
@@ -123,6 +120,16 @@ const checkWin = () => {
         resetGame();
     }
 };
+
+//listen for the start game button to be pressed
+startBtn.addEventListener('click', () => {
+    let resetBtn = startBtn.textContent;
+    overlay.style.display = 'none';
+    
+    if (resetBtn === 'Try Again' || resetBtn === 'Play Again') {
+        resetGame();
+    };
+});
 
 //listen for the onscreen keyboard to be clicked
 qwerty.addEventListener('click', (e) => {
@@ -137,7 +144,7 @@ qwerty.addEventListener('click', (e) => {
         if (letterFound === null) {
             missed++;
 
-            if (missed <= 5){
+            if (missed > 0){
                 for (let i = 1 ; i <= missed; i++) {
                     let index = [i] - 1;
                     img[index].setAttribute('src', 'images/lostHeart.png');
