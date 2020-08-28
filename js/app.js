@@ -40,7 +40,7 @@ function resetKeyboard() {
 const getRandomPhraseAsArray = arr => {
     let randomIndex = Math.round(Math.random() * (arr.length - 1));
     let randomPhrase = arr[randomIndex];
-        phrases = phrases.filter(phrase => phrase !== randomPhrase);
+        phrases = arr.filter(phrase => phrase !== randomPhrase);
         randomPhrase = arr[randomIndex].split('');
        
     return randomPhrase;
@@ -73,7 +73,7 @@ const checkLetter = button => {
         let letterGuess = letter[i].textContent;
 
         if (letterGuess === button) {
-            letter[i].className = 'show';
+            letter[i].classList.add('show');
             correctGuess = letterGuess;
         }
     }
@@ -132,10 +132,17 @@ startBtn.addEventListener('click', () => {
 
         resetKeyboard();
 
-
         for (let i = 0; i < img.length; i++){
             img[i].setAttribute('src', 'images/liveHeart.png');
         }
+
+        if (phrases.length < 0){
+            phrases = mainPhrases;
+            console.log(phrases)
+            
+            addPhraseToDisplay(getRandomPhraseAsArray(phrases));
+        }
+        
         addPhraseToDisplay(getRandomPhraseAsArray(phrases));
         missed = 0;
     }
