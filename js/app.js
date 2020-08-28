@@ -57,7 +57,7 @@ function resetPhrase(){
 //reset keyboard
 function resetKeyboard() {
     for (let i = 0; i < keyboard.length; i++){
-        keyboard[i].classList.remove('chosen');
+        keyboard[i].classList.remove('chosen', 'wrong');
         keyboard[i].removeAttribute('disabled');
     }
 };
