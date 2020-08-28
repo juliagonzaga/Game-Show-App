@@ -17,7 +17,12 @@ let phrases = [
     'aspire to inspire',
     'all is well',
     'die with memories',
-    'believe in yourself'
+    'believe in yourself',
+    'create happiness',
+    'every moment matters',
+    'nothing is impossible',
+    'time is gold',
+    'make today count'
 ];
 
 let mainPhrases = [ 
@@ -25,7 +30,12 @@ let mainPhrases = [
     'aspire to inspire',
     'all is well',
     'die with memories',
-    'believe in yourself'
+    'believe in yourself',
+    'create happiness',
+    'every moment matters',
+    'nothing is impossible',
+    'time is gold',
+    'make today count'
 ];
 
 //reset keyboard
